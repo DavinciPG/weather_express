@@ -17,7 +17,8 @@ const getWeatherDataPromise = (url) => {
                 let result = {
                     description: description,
                     city: city,
-                    temp: temp
+                    temp: temp,
+                    error: null
                 }
                 resolve(result);
             })
@@ -26,18 +27,6 @@ const getWeatherDataPromise = (url) => {
             })
     });
 }
-
-/* GET home page. */
-router.get('/', function(req, res, next) {
-    let city = 'Tartu';
-    let url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${key}`;
-    getWeatherDataPromise(url)
-        .then(data => {
-           res.render('index', data);
-        });
-});
-
-module.exports = router;
 
 router.all('/', function(req, res) {
     let city
@@ -50,5 +39,10 @@ router.all('/', function(req, res) {
     getWeatherDataPromise(url)
         .then(data => {
            res.render('index', data);
-        });
+        })
+        .catch(error => {
+            res.render('index', {error: 'Problem while getting data, try again'});
+        })
 });
+
+module.exports = router;
