@@ -15,9 +15,6 @@ router.get('/', function(req, res, next) {
             let description = data.weather[0].description;
             let city = data.name;
             let temp = Math.round(parseFloat(data.main.temp)-273.15);
-            console.log(description)
-            console.log(city)
-            console.log(temp)
             res.render('index', {
               description: description,
               city: city,
@@ -30,3 +27,24 @@ router.get('/', function(req, res, next) {
 });
 
 module.exports = router;
+
+router.post('/', function(req, res) {
+    let city = req.body.cityname;
+      fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${key}`)
+        .then(function(resp) {
+            return resp.json()
+        })
+        .then(function(data) {
+            let description = data.weather[0].description;
+            let city = data.name;
+            let temp = Math.round(parseFloat(data.main.temp)-273.15);
+            res.render('index', {
+              description: description,
+              city: city,
+              temp: temp
+            });
+        })
+        .catch(function() {
+            // catch any errors
+        })
+});
