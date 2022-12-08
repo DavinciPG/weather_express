@@ -35,6 +35,10 @@ router.all('/', function(req, res) {
     } else if(req.method == 'POST') {
         city = req.body.cityname;
     }
+    if(city === '') {
+        res.render('index', {error: 'City not specified'});
+        return;
+    }
     let url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${key}`;
     getWeatherDataPromise(url)
         .then(data => {
